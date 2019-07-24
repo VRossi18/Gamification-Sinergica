@@ -1,0 +1,17 @@
+td {
+    height: calc(100vh / 65);
+    width: calc(100vh/ 5);
+}
+
+td .marcado {
+    background-color: blue;
+}
+
+.divisoria {
+    margin-right: 2%;
+}
+
+body {
+    background-color:  #14BFD1;
+    background-image: linear-gradient(#14BFD1,#2A61FA);
+}
