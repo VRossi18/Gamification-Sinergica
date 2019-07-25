@@ -27,6 +27,11 @@ function clickTd() {
                 $(`td#${i}.${tdClass}`).attr('bgcolor',color);
             }
         }
+        let countSave = $(`#${tdClass} .marcado`).length;
+        saveData(tdClass, countSave);
+        if (limit >= 10 || limit >= 30 || limit >= 50 || limit >= 65) {
+            getMessage(limit);
+        }
     });
 }
 
@@ -45,7 +50,43 @@ function getColor(table) {
     }
 }
 
+function getMessage(limit) {
+    if (limit >= 10 && limit <= 30) {
+        alert('>10');
+    }
+    else if (limit >= 30 && limit <= 50) {
+        alert('>30');
+    }
+    else if (limit >= 50 && limit <= 65) {
+        alert('>50');
+    }
+    else if (limit == 65) {
+        alert('>65');
+    }
+} 
+
+function saveData(table, limit) {
+    localStorage.setItem(table, limit);
+}
+
+function renderSaved(table) {
+    let t = localStorage.getItem(table);
+    let color = getColor(table);
+    for (let i = 1; i <= t; i++) {
+        $(`td#${i}.${table}`).addClass('marcado');
+        $(`td#${i}.${table}`).attr('bgcolor',color);
+    }
+}
+
+function renderOnReady() {
+    let tables = $('table');
+    $.each(tables, function() {
+        renderSaved(this.id);
+    });
+}
+
 $(document).ready(function() {
     generateBoard();
     clickTd();
+    renderOnReady();
 });
