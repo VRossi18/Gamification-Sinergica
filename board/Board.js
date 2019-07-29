@@ -30,8 +30,9 @@ function clickTd() {
         let countSave = $(`#${tdClass} .marcado`).length;
         saveData(tdClass, countSave);
         if (limit >= 10 || limit >= 30 || limit >= 50 || limit >= 65) {
-            getMessage(limit);
+            getMessage(limit,tdClass);
         }
+        validateReturnedValues(limit, tdClass);
     });
 }
 
@@ -50,20 +51,38 @@ function getColor(table) {
     }
 }
 
-function getMessage(limit) {
-    if (limit >= 10 && limit <= 30) {
-        alert('>10');
+function getMessage(limit,table) {
+    if (limit >= 10 && limit <= 30 && !$(`.${table}`).hasClass('hasPassed10')) {
+        $(`.${table}`).addClass('hasPassed10');
+        displayModal('Parabéns! Você atingiu a primeira meta, Sinérgico');
     }
-    else if (limit >= 30 && limit <= 50) {
-        alert('>30');
+    else if (limit >= 30 && limit <= 50 && !$(`.${table}`).hasClass('hasPassed30')) {
+        $(`.${table}`).addClass('hasPassed30');
+        displayModal('Uhul, segunda meta! Continue assim');
     }
-    else if (limit >= 50 && limit <= 65) {
-        alert('>50');
+    else if (limit >= 50 && limit <= 65 && !$(`.${table}`).hasClass('hasPassed50')) {
+        $(`.${table}`).addClass('hasPassed50');
+        displayModal('Vitória! Estamos chegando a reta final, Voa Sinérgica');
     }
-    else if (limit == 65) {
-        alert('>65');
+    else if (limit == 65 && !$(`.${table}`).hasClass('hasPassed65')) {
+        $(`.${table}`).addClass('hasPassed65');
+        displayModal('Parabéns!! O gene azul de vocês é incrível!');
     }
-} 
+}
+
+function validateReturnedValues(limit, table) {
+    if (limit < 10 && $(`.${table}`).hasClass('hasPassed10')) 
+        $(`.${table}`).removeClass('hasPassed10');
+    
+    else if (limit < 30 && $(`.${table}`).hasClass('hasPassed30'))
+        $(`.${table}`).removeClass('hasPassed30');
+
+    else if (limit < 50 && $(`.${table}`).hasClass('hasPassed50'))
+        $(`.${table}`).removeClass('hasPassed50');
+
+    else if (limit < 65 && $(`.${table}`).hasClass('hasPassed65'))
+        $(`.${table}`).removeClass('hasPassed65');
+}
 
 function saveData(table, limit) {
     localStorage.setItem(table, limit);
@@ -76,6 +95,15 @@ function renderSaved(table) {
         $(`td#${i}.${table}`).addClass('marcado');
         $(`td#${i}.${table}`).attr('bgcolor',color);
     }
+    if (t >= 10)
+        $(`.${table}`).addClass('hasPassed10');
+    if (t >= 30)
+        $(`.${table}`).addClass('hasPassed30');
+    if (t >= 50)
+        $(`.${table}`).addClass('hasPassed50');
+    if (t >= 65)
+        $(`.${table}`).addClass('hasPassed65');
+
 }
 
 function renderOnReady() {
@@ -83,6 +111,11 @@ function renderOnReady() {
     $.each(tables, function() {
         renderSaved(this.id);
     });
+}
+
+function displayModal(message) {
+    $('#textModal').text(message);
+    $('.modal').modal('toggle');
 }
 
 $(document).ready(function() {
